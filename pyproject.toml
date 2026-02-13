@@ -1,0 +1,40 @@
+[project]
+name = "10mm-parts-service"
+version = "0.1.0"
+description = "10mm GMS Parts Service"
+requires-python = ">=3.12"
+dependencies = [
+    "attono-backend-core",
+    "sqlmodel",
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+    "ruff",
+    "pip-audit",
+    "bandit",
+    "uvicorn>=0.34.0",
+    "cryptography>=46.0.5",
+    "aiosqlite>=0.20.0",
+]
+
+[tool.uv.sources]
+attono-backend-core = { path = "./libraries/backend-core" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/backend"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "I"]
+ignore = ["B008"]
+
+[tool.bandit]
+exclude_dirs = ["libraries", "node_modules", ".venv"]
+skips = ["B101"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
