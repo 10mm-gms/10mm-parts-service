@@ -1,2 +1,3 @@
 # 10mm-parts-service
-The source code for the parts service that supports the GMS
+The source code for 10mm GMS parts service and backend
+
