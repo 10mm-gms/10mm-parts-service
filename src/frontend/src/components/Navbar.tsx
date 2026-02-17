@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import logo from '../assets/logo.svg';
 
 const Navbar: React.FC = () => {
     return (
@@ -7,7 +8,7 @@ const Navbar: React.FC = () => {
             <div className="max-w-6xl mx-auto px-8">
                 <div className="flex space-x-8 h-16 items-center">
                     <div className="flex-shrink-0 flex items-center mr-4">
-                        <span className="text-primary font-black tracking-tighter text-xl">PARTS_PRO</span>
+                        <img src={logo} alt="10mm Logo" className="h-8 w-auto" />
                     </div>
                     <div className="flex space-x-1 h-full">
                         <NavLink

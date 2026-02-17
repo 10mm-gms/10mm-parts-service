@@ -19,5 +19,5 @@
 - [x] [BUG-2602080726]: Resolved container build failure (React types mismatch, App.test path error, and missing ui-core build in Dockerfile).
 - [x] [BUG-2602080706]: Frontend refactored to adhere to updated 10mm GMS Design Standards (Light Theme, Green Primary).
 - [x] Initial Repository Setup
-- [x] [EPIC-001 parts and vehicles](epics/EPIC-001%20parts%20and%20vehicles/stories.md)
+- [x] [EPIC-001 parts and vehicles](epics/EPIC-001%20parts%20and%20vehicles/stories.md) [TWEAK-2602171819]
 - [x] [BUG-2602090613]: Verification of Traceability Matrix completed. All requirements associated with EPIC-001 are now covered by passing unit, integration, or E2E tests, including UI support for Vehicles, Search, and Linking.
