@@ -105,3 +105,7 @@ Create, update and delete actions should require a JWT token to be present in th
 
 ## NFR-003: Data integrity
 Data should be saved in a postgres database. The run_docker.sh script should point to a local postgres+sqlite database. DATABASE_URL should be set in the .env file and is mandatory for the container to start. 
+# Tweak Stories
+
+## [x] TWEAK-2602171819: Use official 10mm logo
+As a user, I want the official 10mm logo to be displayed in the navigation bar instead of the "PARTS_PRO" placeholder text.

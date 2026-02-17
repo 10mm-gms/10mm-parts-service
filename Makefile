@@ -42,7 +42,7 @@ lint-mobile: ## Run mobile static analysis
 
 code-scan: ## Run source-level security scanners
 	@echo "Running Source Code Security Scans..."
-	cd src/frontend && npm audit
+	cd src/frontend && npm audit --audit-level=high
 	uv run pip-audit
 	uv run bandit -c pyproject.toml -r src/backend
 	docker run --rm -v $(PWD):/src returntocorp/semgrep semgrep --config auto /src --error
