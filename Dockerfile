@@ -32,9 +32,6 @@ WORKDIR /app
 # Set runtime environment
 ENV PYTHONPATH="/app/src/backend:/app"
 ENV PYTHONUNBUFFERED=1
-# Default DATABASE_URL to match run_docker.sh expectations
-ENV DATABASE_URL="sqlite:////app/test-data.db"
-
 # Copy Python site-packages and binaries from builder
 COPY --from=backend-builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=backend-builder /usr/local/bin /usr/local/bin

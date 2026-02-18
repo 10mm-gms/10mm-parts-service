@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
             <div className="max-w-6xl mx-auto px-8">
                 <div className="flex space-x-8 h-16 items-center">
                     <div className="flex-shrink-0 flex items-center mr-4">
-                        <img src={logo} alt="10mm Logo" className="h-8 w-auto" />
+                        <img src={logo} alt="10mm Logo" className="h-10 w-auto" />
                     </div>
                     <div className="flex space-x-1 h-full">
                         <NavLink

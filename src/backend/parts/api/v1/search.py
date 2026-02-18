@@ -2,21 +2,20 @@ from db.session import get_session
 from fastapi import APIRouter, Depends
 from parts.db.models import Part, Vehicle
 from parts.schemas.search import SearchResult
-from sqlmodel import Session, col, or_, select
+from sqlmodel import col, or_, select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 router = APIRouter(prefix="/search", tags=["Search"])
 
 
 @router.get("/", response_model=SearchResult)
-async def search(q: str, session: Session = Depends(get_session)):
+async def search(q: str, session: AsyncSession = Depends(get_session)):
     """
     US-021: Free text search for parts and vehicles
     """
     query = f"%{q}%"
 
     # Search Parts
-    # Note: searching across "all fields" - for simplicity I'll pick the most relevant ones
-    # In production, this would use Full Text Search (GIN indexes on jsonb/tsvector)
     parts_statement = select(Part).where(
         or_(
             col(Part.internal_part_code).ilike(query),
@@ -28,7 +27,8 @@ async def search(q: str, session: Session = Depends(get_session)):
             col(Part.oe_description).ilike(query),
         )
     )
-    parts = session.exec(parts_statement).all()
+    parts_result = await session.exec(parts_statement)
+    parts = parts_result.all()
 
     # Search Vehicles
     vehicles_statement = select(Vehicle).where(
@@ -40,6 +40,7 @@ async def search(q: str, session: Session = Depends(get_session)):
             col(Vehicle.trim_level).ilike(query),
         )
     )
-    vehicles = session.exec(vehicles_statement).all()
+    vehicles_result = await session.exec(vehicles_statement)
+    vehicles = vehicles_result.all()
 
     return SearchResult(parts=parts, vehicles=vehicles)

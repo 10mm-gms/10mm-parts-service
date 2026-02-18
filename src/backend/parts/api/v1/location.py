@@ -5,7 +5,8 @@ from db.session import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from parts.db.models import Location
 from parts.schemas.location import LocationCreate, LocationRead, LocationUpdate
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 router = APIRouter(prefix="/locations", tags=["Locations"])
 
@@ -13,7 +14,7 @@ router = APIRouter(prefix="/locations", tags=["Locations"])
 @router.post("/", response_model=LocationRead, status_code=status.HTTP_201_CREATED)
 async def create_location(
     location_in: LocationCreate,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     _=Depends(get_current_user),
 ):
     """
@@ -21,26 +22,27 @@ async def create_location(
     """
     db_location = Location.model_validate(location_in)
     session.add(db_location)
-    session.commit()
-    session.refresh(db_location)
+    await session.commit()
+    await session.refresh(db_location)
     return db_location
 
 
 @router.get("/", response_model=list[LocationRead])
-async def list_locations(session: Session = Depends(get_session)):
+async def list_locations(session: AsyncSession = Depends(get_session)):
     """
     US-018: View all locations
     """
-    locations = session.exec(select(Location)).all()
+    result = await session.exec(select(Location))
+    locations = result.all()
     return locations
 
 
 @router.get("/{location_id}", response_model=LocationRead)
-async def get_location(location_id: UUID, session: Session = Depends(get_session)):
+async def get_location(location_id: UUID, session: AsyncSession = Depends(get_session)):
     """
     US-019: View a single location
     """
-    location = session.get(Location, location_id)
+    location = await session.get(Location, location_id)
     if not location:
         raise HTTPException(status_code=404, detail="Location not found")
     return location
@@ -50,13 +52,13 @@ async def get_location(location_id: UUID, session: Session = Depends(get_session
 async def update_location(
     location_id: UUID,
     location_in: LocationUpdate,
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
     _=Depends(get_current_user),
 ):
     """
     US-016: Edit an existing location
     """
-    db_location = session.get(Location, location_id)
+    db_location = await session.get(Location, location_id)
     if not db_location:
         raise HTTPException(status_code=404, detail="Location not found")
 
@@ -65,22 +67,22 @@ async def update_location(
         setattr(db_location, key, value)
 
     session.add(db_location)
-    session.commit()
-    session.refresh(db_location)
+    await session.commit()
+    await session.refresh(db_location)
     return db_location
 
 
 @router.delete("/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_location(
-    location_id: UUID, session: Session = Depends(get_session), _=Depends(get_current_user)
+    location_id: UUID, session: AsyncSession = Depends(get_session), _=Depends(get_current_user)
 ):
     """
     US-017: Delete an existing location
     """
-    db_location = session.get(Location, location_id)
+    db_location = await session.get(Location, location_id)
     if not db_location:
         raise HTTPException(status_code=404, detail="Location not found")
 
-    session.delete(db_location)
-    session.commit()
+    await session.delete(db_location)
+    await session.commit()
     return None

@@ -53,6 +53,8 @@ docker run -d \
     -v "$(pwd)/data/test-data.db:$DB_FILE_CONTAINER" \
     -e SECRET_KEY \
     -e AUTO_SEED_DATA \
+    -e DATABASE_URL \
+    -e ALLOWED_DOMAIN \
     "$IMAGE_NAME"
 
 echo "------------------------------------------------"

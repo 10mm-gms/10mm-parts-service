@@ -24,7 +24,7 @@ export default defineConfig({
     ],
     webServer: [
         {
-            command: 'cd ../.. && rm -f e2e-test.db && DATABASE_URL=sqlite:///./e2e-test.db PYTHONPATH=src/backend uv run uvicorn main:app --port 8001 > e2e-backend.log 2>&1',
+            command: 'cd ../.. && rm -f e2e-test.db && DATABASE_URL=sqlite+aiosqlite:///./e2e-test.db PYTHONPATH=src/backend uv run uvicorn main:app --port 8001 > e2e-backend.log 2>&1',
             url: 'http://localhost:8001/health',
             reuseExistingServer: !process.env.CI,
         },

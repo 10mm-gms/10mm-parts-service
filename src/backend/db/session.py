@@ -1,7 +1,9 @@
 import os
 
 from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 load_dotenv()
 
@@ -16,13 +18,25 @@ if DATABASE_URL.startswith("postgresql"):
         print("Postgres driver (psycopg2) not found, falling back to SQLite")
         DATABASE_URL = sqlite_url
 
-engine = create_engine(DATABASE_URL, echo=True)
+# Handle sync vs async engines for open source compatibility
+if "aiosqlite" in DATABASE_URL or "asyncpg" in DATABASE_URL:
+    engine = create_async_engine(DATABASE_URL, echo=True)
+else:
+    engine = create_engine(DATABASE_URL, echo=True)
 
 
-def get_session():
-    with Session(engine) as session:
-        yield session
+async def get_session():
+    if isinstance(engine, AsyncEngine):
+        async with AsyncSession(engine) as session:
+            yield session
+    else:
+        with Session(engine) as session:
+            yield session
 
 
-def init_db():
-    SQLModel.metadata.create_all(engine)
+async def init_db():
+    if isinstance(engine, AsyncEngine):
+        async with engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
+    else:
+        SQLModel.metadata.create_all(engine)
