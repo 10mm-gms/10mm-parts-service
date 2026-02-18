@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "10mm GMS Parts Service"
 requires-python = ">=3.12"
 dependencies = [
-    "attono-backend-core",
+    "gms-backend-core",
     "sqlmodel",
     "pytest",
     "pytest-asyncio",
@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-attono-backend-core = { path = "./libraries/backend-core" }
+gms-backend-core = { path = "./libraries/backend-core" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/backend"]

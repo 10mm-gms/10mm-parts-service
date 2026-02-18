@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'attono-ui-core';
+import { Button } from '10mm-ui-core';
 
 interface Vehicle {
     id: string;

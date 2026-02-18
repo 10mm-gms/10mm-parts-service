@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'attono-ui-core';
+import { Button } from '10mm-ui-core';
 
 interface Location {
     id: string;

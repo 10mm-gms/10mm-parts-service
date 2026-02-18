@@ -2,8 +2,8 @@ import { test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from '../src/App';
 
-test('renders learn react link', () => {
+test('renders parts dashboard', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Hello World/i);
-  expect(linkElement).toBeInTheDocument();
+  const titleElement = screen.getByText(/Parts Dashboard/i);
+  expect(titleElement).toBeInTheDocument();
 });

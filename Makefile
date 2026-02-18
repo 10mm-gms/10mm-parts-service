@@ -102,7 +102,7 @@ build-container: ## Build the web frontend and docker container
 	@if [ -L libraries ]; then \
 		echo "📦 Temporarily replacing libraries symlink with copy for Docker..."; \
 		mv libraries libraries.tmp; \
-		cp -r ../product_standards/libraries ./libraries; \
+		cp -r ../10mm-product-standards/libraries ./libraries; \
 	fi
 	docker build --platform linux/amd64 --load --build-arg VITE_BUILD_ID=$(BUILD_ID) -t parts-service:latest -t parts-service:$(BUILD_ID) .
 	@if [ -L libraries.tmp ]; then \

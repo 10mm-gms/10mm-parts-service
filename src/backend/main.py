@@ -1,12 +1,12 @@
 import os
 
-from attono_backend_core.config import GmsBackendSettings
-from attono_backend_core.logging.config import setup_logging
 from db.session import init_db
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from gms_backend_core.config import GmsBackendSettings
+from gms_backend_core.logging.config import setup_logging
 from parts.api.v1.location import router as locations_router
 from parts.api.v1.part import router as parts_router
 from parts.api.v1.search import router as search_router
