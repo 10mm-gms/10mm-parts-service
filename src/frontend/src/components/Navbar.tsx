@@ -6,9 +6,9 @@ const Navbar: React.FC = () => {
     return (
         <nav className="bg-card border-b sticky top-0 z-40">
             <div className="max-w-6xl mx-auto px-8">
-                <div className="flex space-x-8 h-16 items-center">
-                    <div className="flex-shrink-0 flex items-center mr-4">
-                        <img src={logo} alt="10mm Logo" className="h-10 w-auto" />
+                <div className="flex space-x-8 items-center">
+                    <div className="flex-shrink-0 flex items-center mr-4 my-10 text-nowrap">
+                        <img src={logo} alt="10mm Logo" className="h-[52px] w-auto" />
                     </div>
                     <div className="flex space-x-1 h-full">
                         <NavLink

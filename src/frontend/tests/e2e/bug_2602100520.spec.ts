@@ -5,7 +5,7 @@ test.use({ baseURL: process.env.PLAYWRIGHT_MODE === 'SYSTEM' ? 'http://localhost
 test('Part Create Modal has all fields from US-001', async ({ page }) => {
     page.on('console', msg => console.log('BROWSER:', msg.text()));
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('Parts Dashboard');
+    await expect(page.locator('h1')).toContainText('Parts');
     await page.click('button:has-text("Add New Part")', { timeout: 10000 });
 
     // Existing fields
@@ -28,7 +28,7 @@ test('Part Create Modal has all fields from US-001', async ({ page }) => {
 
 test('successfully creates a part with all fields', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('Parts Dashboard');
+    await expect(page.locator('h1')).toContainText('Parts');
     await page.click('button:has-text("Add New Part")', { timeout: 10000 });
 
     await page.fill('#mpn', 'TEST-MPN-1');

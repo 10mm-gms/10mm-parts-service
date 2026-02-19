@@ -160,9 +160,8 @@ const PartsPage: React.FC = () => {
                 <div className="flex justify-between items-start mb-12">
                     <div className="flex-1">
                         <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-                            Parts Dashboard
+                            Parts
                         </h1>
-                        <Link to="/vehicles" className="text-primary hover:underline text-sm font-bold uppercase tracking-widest">Manage Vehicles →</Link>
 
                         <div className="mt-8 relative max-w-md group">
                             <input

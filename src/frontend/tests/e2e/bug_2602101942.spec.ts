@@ -5,7 +5,7 @@ test.describe('BUG-2602101942: Missing fields in Add Vehicle modal', () => {
         await page.goto('/vehicles');
 
         // Wait for the page to load
-        await expect(page.locator('h1')).toContainText('Vehicle Fleet');
+        await expect(page.locator('h1')).toContainText('Vehicles');
 
         // Open the modal
         await page.click('button:has-text("Add New Vehicle")');

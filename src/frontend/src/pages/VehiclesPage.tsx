@@ -116,9 +116,8 @@ const VehiclesPage: React.FC = () => {
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-12">
                     <div>
-                        <Link to="/" className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-widest mb-4 inline-block">← Back to Parts</Link>
                         <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-                            Vehicle Fleet
+                            Vehicles
                         </h1>
                         <p className="text-muted-foreground">Manage supported vehicles and compatibility profiles</p>
                     </div>
