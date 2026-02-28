@@ -7,6 +7,7 @@
   - [ ] Example Story 2
 
 ## 🚀 In Progress (Active)
+- [ ] [BUG-2602281925]: Fix security vulnerabilities in frontend dependencies (ajv, minimatch, rollup) causing container build failure.
 
 ## ✅ Done (Completed)
 - [x] [BUG-2602102127]: Navigation Tabs (Parts, Vehicles, Locations) and full CRUD for Locations (US-015 to US-019) + Stock Management (US-020) are now implemented. Updated Traceability Matrix and confirmed 100% Green Build Pipeline.
