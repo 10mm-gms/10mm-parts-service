@@ -15,7 +15,10 @@ This plan follows a phased approach to implementing the [design.md](./design.md)
 
 ## Phase 2: S3 Integration & Backend API (Standard 3: Security)
 
-1.  **S3 Client Configuration**:
+1.  **MinIO Local Environment**: 
+    - Create `run_minio.sh` to launch a local S3-compatible server for development.
+    - Update `run_docker.sh` to include `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, and `S3_SECRET_KEY` environment variables.
+2.  **S3 Client Configuration**:
     - Integrate `boto3` and configure via environment variables (`S3_ENDPOINT`, `S3_BUCKET`, `S3_KEY`, `S3_SECRET`).
 2.  **Presigned URL Logic**:
     - Implement `generate_presigned_id_and_url` for `PUT` operations.
