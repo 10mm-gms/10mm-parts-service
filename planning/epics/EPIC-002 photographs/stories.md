@@ -68,3 +68,19 @@ As a user, I want to be able to use my device's camera to take multiple photogra
 - Enforce strict mimetype checking on the client before processing to prevent non-image uploads.
 - The backend should perform an asynchronous check of the first 12 bytes of newly uploaded files to verify the "WebP" magic numbers before making them visible in the UI.
 - Use the **MediaDevices API** for US-004 to build the custom viewfinder and frame-capture logic.
+
+### US-005 View existing photographs
+
+As a user, I want to be able to view photographs for parts and vehicles so that I can have a visual reference for the parts and vehicles in my inventory. The photographs should be displayed in a user-friendly manner, such as in a modal or a lightbox. 
+
+#### Acceptance Criteria
+
+- [ ] WHen I click on the primary photograph for a part, it should open in a modal or a lightbox. Only the primary photograph should be displayed. THere should be controls to navigate to the next and previous photographs
+- [ ] I should be able to zoom in and out of the photograph
+- [ ] I should be able to pan around the photograph
+- [ ] I should be able to close the modal or lightbox by clicking on a close button or by pressing the escape key.
+- [ ] I should be able to download the photograph by clicking on a download button.
+- [ ] The individual part view modal should display a thumbnail of the primary photograph.
+- [ ] The vehicle view modal should display a thumbnail of the primary photograph.
+- [ ] The part list view should not display photographs.
+- [ ] The vehicle list view should not display photographs.

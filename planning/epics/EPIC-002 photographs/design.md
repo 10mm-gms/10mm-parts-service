@@ -54,6 +54,15 @@ Returns all photographs for a part.
     - **Optimization**: Resize to 2000px, convert to `Blob` (image/webp, 0.75 quality) on client-side (Standard 4: Normalisation).
     - **Async Upload**: Start upload to S3 immediately after snap; update UI counter.
 
+### `PhotoLightbox` (Story US-005)
+- **Component**: Full-screen modal with backdrop-blur.
+- **Controls**: 
+    - Floating `ChevronLeft`/`ChevronRight` for navigation.
+    - `ZoomIn`/`ZoomOut`/`Rotate` controls (overlay).
+    - `Download` button linking to presigned URL with `Content-Disposition`.
+- **Keyboard Interface**: `Escape` to close, `ArrowLeft`/`ArrowRight` for navigation.
+- **Gesture Support**: Pan and pinch-to-zoom (via `framer-motion` or `react-use-gesture`).
+
 ### `OptimizationUtility`
 - **Client-Side**: Strips EXIF/Sensitive metadata automatically via Canvas redraw (Standard 4).
 

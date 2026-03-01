@@ -44,6 +44,10 @@ This plan follows a phased approach to implementing the [design.md](./design.md)
     - Update `PartDetailsPage` to replace simple image field with the `PhotoManagerModal`.
 3.  **Photo Grid & Dashboard**:
     - Implement thumbnail gallery with "Primary" and "Delete" actions (Standard 2: Branding Colors).
+4.  **Interactive Photo Viewer (Story US-005)**:
+    - Build `PhotoLightbox` with pan, zoom, and sequence navigation.
+    - Implement keyboard and mousewheel zoom support.
+    - Integrate "Download" action using presigned URLs.
 
 ## Phase 5: Testing & Verification (Standard 5: Traceability)
 

@@ -20,6 +20,10 @@ This document ensures 100% test coverage for the requirements of EPIC-002, as pe
 | **REQ-PHOTO-012** | Mark a specific photograph as the "Primary" image for a part. | US-003 | `test_primary_photo_assignment` |
 | **REQ-PHOTO-013** | Rapid-Fire Camera Capture using MediaDevices API. | US-004 | `test_media_devices_snapshot` |
 | **REQ-PHOTO-014** | Snapshot counter and camera switching support. | US-004 | `test_viewfinder_controls` |
+| **REQ-PHOTO-015** | Interactive Lightbox: Zoom, Pan, Prev/Next navigation. | US-005 | `test_lightbox_interaction` |
+| **REQ-PHOTO-016** | Omit photographs from Part and Vehicle List views. | US-005 | `test_list_view_photo_exclusion` |
+| **REQ-PHOTO-017** | Keyboard navigation (Escape to close, Arrows to navigate). | US-005 | `test_lightbox_keyboard_nav` |
+| **REQ-PHOTO-018** | Direct download action for displayed photograph. | US-005 | `test_lightbox_download_link` |
 
 ## 2. Testing Strategy (Standard 5: Testing Hierarchy)
 
