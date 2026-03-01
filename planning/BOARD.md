@@ -5,6 +5,7 @@
 - [ ] Example Epic A
   - [ ] Example Story 1
   - [ ] Example Story 2
+- [ ] [EPIC-002]: Photographic Inventory & High-Speed Documentation (Planning)
 
 ## 🚀 In Progress (Active)
 - [ ] [EPIC-001]: Manage high-performance EV/hybrid parts and vehicle compatibility (Ready for Review)
