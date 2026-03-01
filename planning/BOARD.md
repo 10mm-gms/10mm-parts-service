@@ -7,9 +7,9 @@
   - [ ] Example Story 2
 
 ## 🚀 In Progress (Active)
-- [ ] [BUG-2602281925]: Fix security vulnerabilities in frontend dependencies (ajv, minimatch, rollup) causing container build failure.
 
 ## ✅ Done (Completed)
+- [x] [BUG-2602281925]: Resolved high severity security vulnerabilities in frontend dependencies (ajv, minimatch, rollup) via `npm audit fix`. Verified 100% Green Build Pipeline.
 - [x] [BUG-2602102127]: Navigation Tabs (Parts, Vehicles, Locations) and full CRUD for Locations (US-015 to US-019) + Stock Management (US-020) are now implemented. Updated Traceability Matrix and confirmed 100% Green Build Pipeline.
 - [x] [BUG-2602101942]: Add Vehicle modal is missing properties required by US-006 (To Year, Variant, Body style, Drive type, Trim level). Successfully added all missing fields and enhanced the vehicle list UI.
 - [x] [BUG-2602100520]: Part Create/Edit modal is missing fields required by US-001 (OE Part Number, Price, Supplier, URL, Notes, etc.). Successfully updated PartsPage modal and PartDetailsPage with all missing fields and improved UX.
