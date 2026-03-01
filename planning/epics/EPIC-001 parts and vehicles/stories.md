@@ -110,5 +110,5 @@ Data should be saved in a postgres database. The run_docker.sh script should poi
 ## [x] TWEAK-2602171819: Use official 10mm logo
 As a user, I want the official 10mm logo to be displayed in the navigation bar instead of the "PARTS_PRO" placeholder text.
 
-## [ ] TWEAK-2603011556: Maximize Dialogue Box Width
+## [x] TWEAK-2603011556: Maximize Dialogue Box Width
 As a user, I want all dialogue boxes (modals) to occupy 95% of the page width on medium and large screens, and 98% on small devices, to maximize usability.
