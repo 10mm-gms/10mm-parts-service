@@ -42,6 +42,19 @@ As a user, I want to be able to manage photographs for parts and vehicles so tha
 - [ ] The photographs should be deletable, such that authorized users can update or remove photographs as needed. There should be one delete button per photograph. There should be a confirmation dialog before a photograph is deleted.
 - [ ] It should be possible to mark a photograph as the primary photograph for a part.
 
+### US-004 Rapid-Fire Camera Capture
+
+As a user, I want to be able to use my device's camera to take multiple photographs in rapid succession without leaving the camera interface, so that I can quickly document parts during an inspection.
+
+#### Acceptance Criteria
+
+- [ ] There must be a "Take Photo" mode that launches a live camera viewfinder within the application (using the MediaDevices API).
+- [ ] It must be possible to snap photos repeatedly using a single shutter button.
+- [ ] A visible counter must show the number of photos captured in the current session.
+- [ ] The user must be able to switch between the front and rear cameras (if available).
+- [ ] All security and optimization rules from US-002 (WebP, resizing, S3 direct upload, magic byte verification) must apply to these photos.
+- [ ] The user should be able to review captured thumbnails before finalized upload.
+
 ## Dependencies
 
 - [ ] EPIC-001 Parts and Vehicles
@@ -54,3 +67,4 @@ As a user, I want to be able to manage photographs for parts and vehicles so tha
 - Use the `ResponseContentDisposition` parameter when generating download URLs to restore the original filename for the user.
 - Enforce strict mimetype checking on the client before processing to prevent non-image uploads.
 - The backend should perform an asynchronous check of the first 12 bytes of newly uploaded files to verify the "WebP" magic numbers before making them visible in the UI.
+- Use the **MediaDevices API** for US-004 to build the custom viewfinder and frame-capture logic.
