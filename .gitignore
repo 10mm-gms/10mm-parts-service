@@ -51,3 +51,5 @@ Thumbs.db
 *.db
 .venv/
 src/frontend/playwright-report/index.html
+.env
+data/
