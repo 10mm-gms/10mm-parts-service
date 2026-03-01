@@ -23,6 +23,7 @@
 * API for accessing parts information
 * API for accessing stock levels
 * User authorisation
+* Marking of data items as shared or private, for a future global parts DB
 
 ### Anti-Scope (Out of Bounds)
 * Mobile interface
