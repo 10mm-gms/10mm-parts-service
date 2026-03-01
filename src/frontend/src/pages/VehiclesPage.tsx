@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '10mm-ui-core';
+import { Button, Modal } from '10mm-ui-core';
 
 interface Vehicle {
     id: string;
@@ -194,154 +194,151 @@ const VehiclesPage: React.FC = () => {
                 </div>
             </div>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-card w-full max-w-md rounded-2xl border shadow-2xl overflow-hidden">
-                        <div className="px-8 py-6 border-b flex justify-between items-center bg-muted/30">
-                            <h2 className="text-xl font-bold">{editingVehicle ? 'Edit Vehicle' : 'New Vehicle Profile'}</h2>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => { setIsModalOpen(false); setEditingVehicle(null); }}
+                title={editingVehicle ? 'Edit Vehicle' : 'New Vehicle Profile'}
+            >
+                <form onSubmit={handleSubmit} className="p-0">
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Make</label>
+                                <input
+                                    id="make"
+                                    required
+                                    placeholder="e.g. Tesla"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.make}
+                                    onChange={(e) => setFormData({ ...formData, make: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Model</label>
+                                <input
+                                    id="model"
+                                    required
+                                    placeholder="e.g. Model 3"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.model}
+                                    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-0">
-                            <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Make</label>
-                                        <input
-                                            id="make"
-                                            required
-                                            placeholder="e.g. Tesla"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.make}
-                                            onChange={(e) => setFormData({ ...formData, make: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Model</label>
-                                        <input
-                                            id="model"
-                                            required
-                                            placeholder="e.g. Model 3"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.model}
-                                            onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
 
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">From Year</label>
-                                        <input
-                                            id="from_year"
-                                            type="number"
-                                            required
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.from_year}
-                                            onChange={(e) => setFormData({ ...formData, from_year: parseInt(e.target.value) })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">To Year</label>
-                                        <input
-                                            id="to_year"
-                                            type="number"
-                                            placeholder="Ongoing"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.to_year || ''}
-                                            onChange={(e) => setFormData({ ...formData, to_year: e.target.value ? parseInt(e.target.value) : null })}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Power Type</label>
-                                        <select
-                                            id="power_type"
-                                            required
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
-                                            value={formData.power_type}
-                                            onChange={(e) => setFormData({ ...formData, power_type: e.target.value })}
-                                        >
-                                            {['EV', 'PHEV', 'MHEV'].map(t => (
-                                                <option key={t} value={t}>{t}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Drive Type</label>
-                                        <select
-                                            id="drive_type"
-                                            required
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
-                                            value={formData.drive_type}
-                                            onChange={(e) => setFormData({ ...formData, drive_type: e.target.value })}
-                                        >
-                                            {['RWD', 'FWD', 'AWD'].map(t => (
-                                                <option key={t} value={t}>{t}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Body Style</label>
-                                    <select
-                                        id="body_style"
-                                        required
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
-                                        value={formData.body_style}
-                                        onChange={(e) => setFormData({ ...formData, body_style: e.target.value })}
-                                    >
-                                        {['Hatchback', 'Saloon', 'Estate', 'SUV', 'Coupe', 'Convertible', 'MPV', 'Pickup', 'Van'].map(s => (
-                                            <option key={s} value={s}>{s}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Variant</label>
-                                        <input
-                                            id="variant"
-                                            placeholder="e.g. Long Range"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.variant}
-                                            onChange={(e) => setFormData({ ...formData, variant: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Trim Level</label>
-                                        <input
-                                            id="trim_level"
-                                            placeholder="e.g. Performance"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.trim_level}
-                                            onChange={(e) => setFormData({ ...formData, trim_level: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">From Year</label>
+                                <input
+                                    id="from_year"
+                                    type="number"
+                                    required
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.from_year}
+                                    onChange={(e) => setFormData({ ...formData, from_year: parseInt(e.target.value) })}
+                                />
                             </div>
-
-                            <div className="p-8 border-t bg-muted/30 flex space-x-4">
-                                <button
-                                    type="button"
-                                    onClick={() => { setIsModalOpen(false); setEditingVehicle(null); }}
-                                    className="flex-1 bg-background border hover:bg-muted text-muted-foreground font-bold py-3 px-6 rounded-xl transition-all"
-                                >
-                                    Cancel
-                                </button>
-                                <Button
-                                    type="submit"
-                                    id="submit-vehicle"
-                                    className="flex-1 bg-primary hover:opacity-90 text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-lg transition-all"
-                                >
-                                    {editingVehicle ? 'Save Changes' : 'Create Vehicle'}
-                                </Button>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">To Year</label>
+                                <input
+                                    id="to_year"
+                                    type="number"
+                                    placeholder="Ongoing"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.to_year || ''}
+                                    onChange={(e) => setFormData({ ...formData, to_year: e.target.value ? parseInt(e.target.value) : null })}
+                                />
                             </div>
-                        </form>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Power Type</label>
+                                <select
+                                    id="power_type"
+                                    required
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
+                                    value={formData.power_type}
+                                    onChange={(e) => setFormData({ ...formData, power_type: e.target.value })}
+                                >
+                                    {['EV', 'PHEV', 'MHEV'].map(t => (
+                                        <option key={t} value={t}>{t}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Drive Type</label>
+                                <select
+                                    id="drive_type"
+                                    required
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
+                                    value={formData.drive_type}
+                                    onChange={(e) => setFormData({ ...formData, drive_type: e.target.value })}
+                                >
+                                    {['RWD', 'FWD', 'AWD'].map(t => (
+                                        <option key={t} value={t}>{t}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Body Style</label>
+                            <select
+                                id="body_style"
+                                required
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none"
+                                value={formData.body_style}
+                                onChange={(e) => setFormData({ ...formData, body_style: e.target.value })}
+                            >
+                                {['Hatchback', 'Saloon', 'Estate', 'SUV', 'Coupe', 'Convertible', 'MPV', 'Pickup', 'Van'].map(s => (
+                                    <option key={s} value={s}>{s}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Variant</label>
+                                <input
+                                    id="variant"
+                                    placeholder="e.g. Long Range"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.variant}
+                                    onChange={(e) => setFormData({ ...formData, variant: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Trim Level</label>
+                                <input
+                                    id="trim_level"
+                                    placeholder="e.g. Performance"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.trim_level}
+                                    onChange={(e) => setFormData({ ...formData, trim_level: e.target.value })}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
-            )}
+
+                    <div className="pt-8 flex space-x-4">
+                        <button
+                            type="button"
+                            onClick={() => { setIsModalOpen(false); setEditingVehicle(null); }}
+                            className="flex-1 bg-background border hover:bg-muted text-muted-foreground font-bold py-3 px-6 rounded-xl transition-all"
+                        >
+                            Cancel
+                        </button>
+                        <Button
+                            type="submit"
+                            id="submit-vehicle"
+                            className="flex-1 bg-primary hover:opacity-90 text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-lg transition-all"
+                        >
+                            {editingVehicle ? 'Save Changes' : 'Create Vehicle'}
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 };

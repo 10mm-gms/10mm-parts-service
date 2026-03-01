@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '10mm-ui-core';
+import { Button, Modal } from '10mm-ui-core';
 
 interface Location {
     id: string;
@@ -143,83 +143,80 @@ const LocationsPage: React.FC = () => {
                 </div>
             </div>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-card w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden">
-                        <div className="px-8 py-6 border-b bg-muted/30">
-                            <h2 className="text-xl font-bold">{editingLocation ? 'Edit Location' : 'New Location'}</h2>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title={editingLocation ? 'Edit Location' : 'New Location'}
+            >
+                <form onSubmit={handleSubmit} className="p-0 space-y-6">
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Name</label>
+                            <input
+                                id="name"
+                                required
+                                className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            />
                         </div>
-                        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Name</label>
-                                    <input
-                                        id="name"
-                                        required
-                                        className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Address</label>
-                                    <textarea
-                                        id="address"
-                                        required
-                                        rows={3}
-                                        className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                                        value={formData.address}
-                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Telephone</label>
-                                        <input
-                                            id="telephone"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                                            value={formData.telephone}
-                                            onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Email</label>
-                                        <input
-                                            id="email"
-                                            type="email"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Notes</label>
-                                    <textarea
-                                        id="notes"
-                                        rows={2}
-                                        className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                                        value={formData.notes}
-                                        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Address</label>
+                            <textarea
+                                id="address"
+                                required
+                                rows={3}
+                                className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Telephone</label>
+                                <input
+                                    id="telephone"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                                    value={formData.telephone}
+                                    onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                                />
                             </div>
-                            <div className="flex space-x-4 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-bold py-3 rounded-xl transition-all"
-                                >
-                                    Cancel
-                                </button>
-                                <Button type="submit" id="submit-location" className="flex-1 bg-primary text-primary-foreground font-bold py-3 rounded-xl">
-                                    {editingLocation ? 'Save Changes' : 'Create Location'}
-                                </Button>
+                            <div>
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Email</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                />
                             </div>
-                        </form>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Notes</label>
+                            <textarea
+                                id="notes"
+                                rows={2}
+                                className="w-full bg-background border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                                value={formData.notes}
+                                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
+                    <div className="flex space-x-4 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => setIsModalOpen(false)}
+                            className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-bold py-3 rounded-xl transition-all"
+                        >
+                            Cancel
+                        </button>
+                        <Button type="submit" id="submit-location" className="flex-1 bg-primary text-primary-foreground font-bold py-3 rounded-xl">
+                            {editingLocation ? 'Save Changes' : 'Create Location'}
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 };

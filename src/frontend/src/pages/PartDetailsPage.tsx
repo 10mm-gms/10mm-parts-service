@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Modal } from '10mm-ui-core';
 
 interface Vehicle {
     id: string;
@@ -317,8 +318,12 @@ const PartDetailsPage: React.FC = () => {
                                         </button>
                                     </div>
 
-                                    {isStockModalOpen && (
-                                        <div className="bg-muted p-4 rounded-2xl space-y-4 mb-4 animate-in slide-in-from-top-2 border">
+                                    <Modal
+                                        isOpen={isStockModalOpen}
+                                        onClose={() => setIsStockModalOpen(false)}
+                                        title="Manage Stock"
+                                    >
+                                        <div className="space-y-4">
                                             <div className="space-y-4">
                                                 <select
                                                     id="location"
@@ -348,7 +353,7 @@ const PartDetailsPage: React.FC = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                    )}
+                                    </Modal>
 
                                     <div className="space-y-4">
                                         {stockLevels.map(stock => (

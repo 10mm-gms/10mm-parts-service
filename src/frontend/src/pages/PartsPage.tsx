@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '10mm-ui-core';
+import { Button, Modal } from '10mm-ui-core';
 
 interface Part {
     id: string;
@@ -249,198 +249,192 @@ const PartsPage: React.FC = () => {
                 </div>
             </div>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-card w-full max-w-md rounded-2xl border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="px-8 py-6 border-b flex justify-between items-center bg-muted/30">
-                            <h2 className="text-xl font-bold">{editingPart ? 'Edit Part' : 'Complete Part Specification'}</h2>
-                            <button onClick={() => { setIsModalOpen(false); setEditingPart(null); }} className="text-muted-foreground hover:text-foreground transition-colors">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => { setIsModalOpen(false); setEditingPart(null); }}
+                title={editingPart ? 'Edit Part' : 'Complete Part Specification'}
+            >
+                <form onSubmit={handleSubmit} className="p-0">
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Manufacturer Part Number</label>
+                            <input
+                                id="mpn"
+                                required
+                                placeholder="e.g. SU-12345"
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                value={formData.manufacturer_part_number}
+                                onChange={(e) => setFormData({ ...formData, manufacturer_part_number: e.target.value })}
+                            />
                         </div>
-                        <form onSubmit={handleSubmit} className="p-0">
-                            <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Manufacturer Part Number</label>
-                                    <input
-                                        id="mpn"
-                                        required
-                                        placeholder="e.g. SU-12345"
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                        value={formData.manufacturer_part_number}
-                                        onChange={(e) => setFormData({ ...formData, manufacturer_part_number: e.target.value })}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Full Description</label>
-                                    <textarea
-                                        id="description"
-                                        required
-                                        rows={3}
-                                        placeholder="Specify material, placement, and dimensions..."
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none"
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Component Type</label>
-                                        <input
-                                            id="type"
-                                            required
-                                            placeholder="e.g. Bushing"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.part_type}
-                                            onChange={(e) => setFormData({ ...formData, part_type: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Vehicle System</label>
-                                        <select
-                                            id="system"
-                                            required
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.system}
-                                            onChange={(e) => setFormData({ ...formData, system: e.target.value })}
-                                        >
-                                            {['Powertrain', 'Transmission', 'Suspension', 'Steering', 'Brakes', 'Electrical', 'Body', 'Interior', 'Other'].map(s => (
-                                                <option key={s} value={s}>{s}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">OE Part Number</label>
-                                        <input
-                                            id="oe-number"
-                                            placeholder="e.g. 123456789"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.oe_part_number}
-                                            onChange={(e) => setFormData({ ...formData, oe_part_number: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Availability</label>
-                                        <select
-                                            id="availability"
-                                            required
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.availability}
-                                            onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
-                                        >
-                                            {['Available', 'Backordered', 'Discontinued'].map(a => (
-                                                <option key={a} value={a}>{a}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Last Known Price</label>
-                                        <input
-                                            id="price"
-                                            type="number"
-                                            step="0.01"
-                                            placeholder="0.00"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.last_known_price}
-                                            onChange={(e) => setFormData({ ...formData, last_known_price: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Last Known Supplier</label>
-                                        <input
-                                            id="supplier"
-                                            placeholder="e.g. PartsCo"
-                                            className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                            value={formData.last_known_supplier}
-                                            onChange={(e) => setFormData({ ...formData, last_known_supplier: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Purchase URL</label>
-                                    <input
-                                        id="url"
-                                        type="url"
-                                        placeholder="https://..."
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                        value={formData.purchase_url}
-                                        onChange={(e) => setFormData({ ...formData, purchase_url: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Image URL</label>
-                                    <input
-                                        id="image"
-                                        placeholder="https://..."
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                        value={formData.image_url}
-                                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">OE Description</label>
-                                    <input
-                                        id="oe-description"
-                                        placeholder="Manufacturer's original description..."
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                        value={formData.oe_description}
-                                        onChange={(e) => setFormData({ ...formData, oe_description: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Notes</label>
-                                    <textarea
-                                        id="notes"
-                                        rows={2}
-                                        placeholder="Additional information..."
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none"
-                                        value={formData.notes}
-                                        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Alternatives (Internal Codes, comma-separated)</label>
-                                    <input
-                                        id="alternatives"
-                                        placeholder="e.g. CODE-1, CODE-2"
-                                        className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                        value={formData.alternatives}
-                                        onChange={(e) => setFormData({ ...formData, alternatives: e.target.value })}
-                                    />
-                                </div>
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Full Description</label>
+                            <textarea
+                                id="description"
+                                required
+                                rows={3}
+                                placeholder="Specify material, placement, and dimensions..."
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none"
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Component Type</label>
+                                <input
+                                    id="type"
+                                    required
+                                    placeholder="e.g. Bushing"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.part_type}
+                                    onChange={(e) => setFormData({ ...formData, part_type: e.target.value })}
+                                />
                             </div>
-
-                            <div className="p-8 border-t bg-muted/30 flex space-x-4">
-                                <button
-                                    type="button"
-                                    onClick={() => { setIsModalOpen(false); setEditingPart(null); }}
-                                    className="flex-1 bg-background border hover:bg-muted text-muted-foreground font-bold py-3 px-6 rounded-xl transition-all"
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Vehicle System</label>
+                                <select
+                                    id="system"
+                                    required
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.system}
+                                    onChange={(e) => setFormData({ ...formData, system: e.target.value })}
                                 >
-                                    Cancel
-                                </button>
-                                <Button
-                                    type="submit"
-                                    id="submit-part"
-                                    className="flex-1 bg-primary hover:opacity-90 text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-lg transition-all"
-                                >
-                                    {editingPart ? 'Save Changes' : 'Create Part'}
-                                </Button>
+                                    {['Powertrain', 'Transmission', 'Suspension', 'Steering', 'Brakes', 'Electrical', 'Body', 'Interior', 'Other'].map(s => (
+                                        <option key={s} value={s}>{s}</option>
+                                    ))}
+                                </select>
                             </div>
-                        </form>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">OE Part Number</label>
+                                <input
+                                    id="oe-number"
+                                    placeholder="e.g. 123456789"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.oe_part_number}
+                                    onChange={(e) => setFormData({ ...formData, oe_part_number: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Availability</label>
+                                <select
+                                    id="availability"
+                                    required
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.availability}
+                                    onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
+                                >
+                                    {['Available', 'Backordered', 'Discontinued'].map(a => (
+                                        <option key={a} value={a}>{a}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Last Known Price</label>
+                                <input
+                                    id="price"
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="0.00"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.last_known_price}
+                                    onChange={(e) => setFormData({ ...formData, last_known_price: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Last Known Supplier</label>
+                                <input
+                                    id="supplier"
+                                    placeholder="e.g. PartsCo"
+                                    className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                    value={formData.last_known_supplier}
+                                    onChange={(e) => setFormData({ ...formData, last_known_supplier: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Purchase URL</label>
+                            <input
+                                id="url"
+                                type="url"
+                                placeholder="https://..."
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                value={formData.purchase_url}
+                                onChange={(e) => setFormData({ ...formData, purchase_url: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Image URL</label>
+                            <input
+                                id="image"
+                                placeholder="https://..."
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                value={formData.image_url}
+                                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">OE Description</label>
+                            <input
+                                id="oe-description"
+                                placeholder="Manufacturer's original description..."
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                value={formData.oe_description}
+                                onChange={(e) => setFormData({ ...formData, oe_description: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Notes</label>
+                            <textarea
+                                id="notes"
+                                rows={2}
+                                placeholder="Additional information..."
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none"
+                                value={formData.notes}
+                                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Alternatives (Internal Codes, comma-separated)</label>
+                            <input
+                                id="alternatives"
+                                placeholder="e.g. CODE-1, CODE-2"
+                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                                value={formData.alternatives}
+                                onChange={(e) => setFormData({ ...formData, alternatives: e.target.value })}
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
+
+                    <div className="pt-8 flex space-x-4">
+                        <button
+                            type="button"
+                            onClick={() => { setIsModalOpen(false); setEditingPart(null); }}
+                            className="flex-1 bg-background border hover:bg-muted text-muted-foreground font-bold py-3 px-6 rounded-xl transition-all"
+                        >
+                            Cancel
+                        </button>
+                        <Button
+                            type="submit"
+                            id="submit-part"
+                            className="flex-1 bg-primary hover:opacity-90 text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-lg transition-all"
+                        >
+                            {editingPart ? 'Save Changes' : 'Create Part'}
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 };
