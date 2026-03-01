@@ -1,6 +1,7 @@
 from uuid import UUID
 
-from core.s3 import generate_upload_url, generate_view_url, delete_object
+from core.s3 import delete_object, generate_upload_url, generate_view_url
+from core.security import get_current_user
 from db.session import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from parts.core.logic import generate_internal_part_code
@@ -232,6 +233,7 @@ async def set_stock_for_part(
     await session.refresh(db_stock)
     return db_stock
 
+
 @router.post("/{part_id}/photographs/intent")
 async def create_upload_intent(
     part_id: UUID, filename: str, session: AsyncSession = Depends(get_session)
@@ -242,6 +244,7 @@ async def create_upload_intent(
         raise HTTPException(status_code=404, detail="Part not found")
 
     from uuid import uuid4
+
     s3_key = f"parts/{part_id}/{uuid4()}.webp"
     upload_url = generate_upload_url(s3_key)
 
@@ -253,10 +256,7 @@ async def create_upload_intent(
 
 @router.post("/{part_id}/photographs/confirm", response_model=PartPhotographRead)
 async def confirm_upload(
-    part_id: UUID,
-    s3_key: str,
-    original_filename: str,
-    session: AsyncSession = Depends(get_session)
+    part_id: UUID, s3_key: str, original_filename: str, session: AsyncSession = Depends(get_session)
 ):
     """US-002: Finalize the photograph upload record."""
     part = await session.get(Part, part_id)
@@ -274,10 +274,7 @@ async def confirm_upload(
     is_primary = count == 0
 
     photo = PartPhotograph(
-        part_id=part_id,
-        s3_key=s3_key,
-        original_filename=original_filename,
-        is_primary=is_primary
+        part_id=part_id, s3_key=s3_key, original_filename=original_filename, is_primary=is_primary
     )
 
     session.add(photo)
@@ -312,7 +309,7 @@ async def set_primary_photograph(
     """US-003: Set a photograph as primary."""
     # Reset existing primary
     statement = select(PartPhotograph).where(
-        PartPhotograph.part_id == part_id, PartPhotograph.is_primary == True
+        PartPhotograph.part_id == part_id, PartPhotograph.is_primary
     )
     result = await session.exec(statement)
     old_primary = result.first()

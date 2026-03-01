@@ -72,5 +72,9 @@ class Part(SQLModel, table=True):
     alternatives: list[UUID] = Field(default_factory=list, sa_type=JSON)
 
     stock_levels: list[StockLevel] = Relationship(back_populates="part")
-    vehicles: list[Vehicle] = Relationship(back_populates="parts", link_model=PartVehicleLink)
-    photographs: list[PartPhotograph] = Relationship(back_populates="part")
+    vehicles: list[Vehicle] = Relationship(
+        back_populates="parts", link_model=PartVehicleLink
+    )
+    photographs: list["PartPhotograph"] = Relationship(
+        back_populates="part", sa_relationship_kwargs={"lazy": "selectin"}
+    )

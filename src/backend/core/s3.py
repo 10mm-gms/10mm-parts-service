@@ -1,4 +1,5 @@
 import os
+
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
@@ -15,8 +16,9 @@ s3_client = boto3.client(
     aws_access_key_id=S3_ACCESS_KEY,
     aws_secret_access_key=S3_SECRET_KEY,
     config=Config(signature_version="s3v4"),
-    region_name="us-east-1" # MinIO/DO typically don't care about region but boto3 requires it
+    region_name="us-east-1",  # MinIO/DO typically don't care about region but boto3 requires it
 )
+
 
 def generate_upload_url(s3_key: str, mime_type: str = "image/webp"):
     """
@@ -26,17 +28,14 @@ def generate_upload_url(s3_key: str, mime_type: str = "image/webp"):
     try:
         url = s3_client.generate_presigned_url(
             "put_object",
-            Params={
-                "Bucket": S3_BUCKET,
-                "Key": s3_key,
-                "ContentType": mime_type
-            },
-            ExpiresIn=300 # 5 minutes
+            Params={"Bucket": S3_BUCKET, "Key": s3_key, "ContentType": mime_type},
+            ExpiresIn=300,  # 5 minutes
         )
         return url
     except ClientError as e:
         print(f"Error generating presigned URL: {e}")
         return None
+
 
 def generate_view_url(s3_key: str, original_filename: str):
     """
@@ -49,14 +48,15 @@ def generate_view_url(s3_key: str, original_filename: str):
             Params={
                 "Bucket": S3_BUCKET,
                 "Key": s3_key,
-                "ResponseContentDisposition": f"attachment; filename=\"{original_filename}\""
+                "ResponseContentDisposition": f'attachment; filename="{original_filename}"',
             },
-            ExpiresIn=300 # 5 minutes
+            ExpiresIn=300,  # 5 minutes
         )
         return url
     except ClientError as e:
         print(f"Error generating view URL: {e}")
         return None
+
 
 def delete_object(s3_key: str):
     """Deletes an object from the bucket."""
@@ -65,6 +65,7 @@ def delete_object(s3_key: str):
         return True
     except ClientError:
         return False
+
 
 def get_object_head(s3_key: str):
     """Gets the first 12 bytes of an object to verify magic numbers."""

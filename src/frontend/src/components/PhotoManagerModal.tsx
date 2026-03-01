@@ -90,7 +90,7 @@ export const PhotoManagerModal: React.FC<PhotoManagerModalProps> = ({
                 const newPhoto = await confirmResponse.json();
                 return newPhoto;
             } catch (err) {
-                console.error(`Upload failed for ${file.name}:`, err);
+                console.error('Upload failed for', file.name, err);
                 return null;
             }
         });
