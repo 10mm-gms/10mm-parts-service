@@ -44,6 +44,17 @@ class Vehicle(SQLModel, table=True):
     parts: list["Part"] = Relationship(back_populates="vehicles", link_model=PartVehicleLink)
 
 
+class PartPhotograph(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    part_id: UUID = Field(foreign_key="part.id", index=True)
+    s3_key: str = Field(unique=True, index=True)
+    original_filename: str
+    is_primary: bool = Field(default=False)
+    created_at: str = Field(default="now()")  # Simplified audit for now
+
+    part: "Part" = Relationship(back_populates="photographs")
+
+
 class Part(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     internal_part_code: str | None = Field(default=None, unique=True, index=True)
@@ -62,3 +73,4 @@ class Part(SQLModel, table=True):
 
     stock_levels: list[StockLevel] = Relationship(back_populates="part")
     vehicles: list[Vehicle] = Relationship(back_populates="parts", link_model=PartVehicleLink)
+    photographs: list[PartPhotograph] = Relationship(back_populates="part")

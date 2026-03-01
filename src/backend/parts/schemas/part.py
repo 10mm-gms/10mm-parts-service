@@ -3,6 +3,17 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
+class PartPhotographRead(BaseModel):
+    id: UUID
+    s3_key: str
+    original_filename: str
+    is_primary: bool
+    view_url: str | None = None  # Populated during read
+
+    class Config:
+        from_attributes = True
+
+
 class PartBase(BaseModel):
     manufacturer_part_number: str
     description: str
@@ -40,6 +51,7 @@ class PartUpdate(BaseModel):
 class PartRead(PartBase):
     id: UUID
     internal_part_code: str
+    photographs: list[PartPhotographRead] = []
 
     class Config:
         from_attributes = True

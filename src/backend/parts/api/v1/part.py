@@ -1,11 +1,11 @@
 from uuid import UUID
 
-from core.security import get_current_user
+from core.s3 import generate_upload_url, generate_view_url, delete_object
 from db.session import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from parts.core.logic import generate_internal_part_code
-from parts.db.models import Part, StockLevel, Vehicle
-from parts.schemas.part import PartCreate, PartRead, PartUpdate
+from parts.db.models import Part, PartPhotograph, StockLevel, Vehicle
+from parts.schemas.part import PartCreate, PartPhotographRead, PartRead, PartUpdate
 from parts.schemas.stock import StockLevelCreate, StockLevelRead
 from parts.schemas.vehicle import VehicleRead
 from sqlalchemy.orm import selectinload
@@ -57,9 +57,17 @@ async def get_part(part_id: UUID, session: AsyncSession = Depends(get_session)):
     """
     REQ-PARTS-005: View a single part (US-005)
     """
-    part = await session.get(Part, part_id)
+    statement = select(Part).where(Part.id == part_id).options(selectinload(Part.photographs))
+    result = await session.exec(statement)
+    part = result.first()
+
     if not part:
         raise HTTPException(status_code=404, detail="Part not found")
+
+    # Populate view URLs
+    for photo in part.photographs:
+        photo.view_url = generate_view_url(photo.s3_key, photo.original_filename)
+
     return part
 
 
@@ -223,3 +231,105 @@ async def set_stock_for_part(
     await session.commit()
     await session.refresh(db_stock)
     return db_stock
+
+@router.post("/{part_id}/photographs/intent")
+async def create_upload_intent(
+    part_id: UUID, filename: str, session: AsyncSession = Depends(get_session)
+):
+    """US-002: Generate presigned URL for upload."""
+    part = await session.get(Part, part_id)
+    if not part:
+        raise HTTPException(status_code=404, detail="Part not found")
+
+    from uuid import uuid4
+    s3_key = f"parts/{part_id}/{uuid4()}.webp"
+    upload_url = generate_upload_url(s3_key)
+
+    if not upload_url:
+        raise HTTPException(status_code=500, detail="Failed to generate upload URL")
+
+    return {"upload_url": upload_url, "s3_key": s3_key}
+
+
+@router.post("/{part_id}/photographs/confirm", response_model=PartPhotographRead)
+async def confirm_upload(
+    part_id: UUID,
+    s3_key: str,
+    original_filename: str,
+    session: AsyncSession = Depends(get_session)
+):
+    """US-002: Finalize the photograph upload record."""
+    part = await session.get(Part, part_id)
+    if not part:
+        raise HTTPException(status_code=404, detail="Part not found")
+
+    # Check photo limit (Standard: Max 30 per part)
+    statement = select(func.count()).where(PartPhotograph.part_id == part_id)
+    result = await session.exec(statement)
+    count = result.one()
+    if count >= 30:
+        raise HTTPException(status_code=400, detail="Maximum 30 photographs allowed per part")
+
+    # Set as primary if it's the first one
+    is_primary = count == 0
+
+    photo = PartPhotograph(
+        part_id=part_id,
+        s3_key=s3_key,
+        original_filename=original_filename,
+        is_primary=is_primary
+    )
+
+    session.add(photo)
+    await session.commit()
+    await session.refresh(photo)
+
+    photo.view_url = generate_view_url(photo.s3_key, photo.original_filename)
+    return photo
+
+
+@router.delete("/{part_id}/photographs/{photo_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_photograph(
+    part_id: UUID, photo_id: UUID, session: AsyncSession = Depends(get_session)
+):
+    """US-003: Delete a photograph."""
+    photo = await session.get(PartPhotograph, photo_id)
+    if not photo or photo.part_id != part_id:
+        raise HTTPException(status_code=404, detail="Photograph not found")
+
+    # Delete from S3
+    delete_object(photo.s3_key)
+
+    await session.delete(photo)
+    await session.commit()
+    return None
+
+
+@router.patch("/{part_id}/photographs/{photo_id}/primary", response_model=PartPhotographRead)
+async def set_primary_photograph(
+    part_id: UUID, photo_id: UUID, session: AsyncSession = Depends(get_session)
+):
+    """US-003: Set a photograph as primary."""
+    # Reset existing primary
+    statement = select(PartPhotograph).where(
+        PartPhotograph.part_id == part_id, PartPhotograph.is_primary == True
+    )
+    result = await session.exec(statement)
+    old_primary = result.first()
+
+    if old_primary:
+        old_primary.is_primary = False
+        session.add(old_primary)
+
+    # Set new primary
+    photo = await session.get(PartPhotograph, photo_id)
+    if not photo or photo.part_id != part_id:
+        raise HTTPException(status_code=404, detail="Photograph not found")
+
+    photo.is_primary = True
+    session.add(photo)
+    await session.commit()
+    await session.refresh(photo)
+
+    photo.view_url = generate_view_url(photo.s3_key, photo.original_filename)
+    return photo

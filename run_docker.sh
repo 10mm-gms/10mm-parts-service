@@ -55,6 +55,10 @@ docker run -d \
     -e AUTO_SEED_DATA \
     -e DATABASE_URL \
     -e ALLOWED_DOMAIN \
+    -e S3_ENDPOINT=${S3_ENDPOINT:-"http://localhost:9000"} \
+    -e S3_BUCKET=${S3_BUCKET:-"gms-parts"} \
+    -e S3_ACCESS_KEY=${S3_ACCESS_KEY:-"minioadmin"} \
+    -e S3_SECRET_KEY=${S3_SECRET_KEY:-"minioadmin"} \
     "$IMAGE_NAME"
 
 echo "------------------------------------------------"
