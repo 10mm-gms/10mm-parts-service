@@ -8,8 +8,8 @@ As a user, I want to remove the Image URL property from the part details modal s
 
 #### Acceptance Criteria
 
-- [ ] The Image URL property must be removed from the part details modal.
-- [ ] The DB schema must be updated to remove the Image URL property.
+- [x] The Image URL property must be removed from the part details modal.
+- [x] The DB schema must be updated to remove the Image URL property.
 
 ### US-002 Upload Existing Photographs
 

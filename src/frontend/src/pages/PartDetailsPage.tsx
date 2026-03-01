@@ -29,7 +29,6 @@ interface Part {
     last_known_supplier: string | null;
     purchase_url: string | null;
     notes: string | null;
-    image_url: string | null;
     oe_description: string | null;
     availability: string;
 }
@@ -189,20 +188,12 @@ const PartDetailsPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            {part.image_url && (
-                                <div className="w-48 h-48 lg:w-32 lg:h-32 rounded-2xl overflow-hidden border-4 border-background shadow-xl shrink-0">
-                                    <img src={part.image_url} alt={part.description} className="w-full h-full object-cover" />
-                                </div>
-                            )}
-
-                            {!part.image_url && (
-                                <div className="text-left lg:text-right">
-                                    <p className="text-muted-foreground uppercase text-[10px] font-black tracking-[0.2em] mb-2">Price Estimate</p>
-                                    <p className="text-4xl font-black tracking-tighter">
-                                        {part.last_known_price ? `$${part.last_known_price.toFixed(2)}` : 'N/A'}
-                                    </p>
-                                </div>
-                            )}
+                            <div className="text-left lg:text-right">
+                                <p className="text-muted-foreground uppercase text-[10px] font-black tracking-[0.2em] mb-2">Price Estimate</p>
+                                <p className="text-4xl font-black tracking-tighter">
+                                    {part.last_known_price ? `$${part.last_known_price.toFixed(2)}` : 'N/A'}
+                                </p>
+                            </div>
                         </div>
                     </div>
 

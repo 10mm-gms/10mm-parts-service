@@ -56,7 +56,6 @@ class Part(SQLModel, table=True):
     last_known_supplier: str | None = None
     purchase_url: str | None = None
     notes: str | None = None
-    image_url: str | None = None
     oe_description: str | None = None
     availability: str = Field(default="Available")  # Available, Backordered, Discontinued
     alternatives: list[UUID] = Field(default_factory=list, sa_type=JSON)

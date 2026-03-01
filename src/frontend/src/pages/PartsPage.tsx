@@ -14,7 +14,6 @@ interface Part {
     last_known_supplier?: string;
     purchase_url?: string;
     notes?: string;
-    image_url?: string;
     oe_description?: string;
     availability: string;
     alternatives: string[];
@@ -36,7 +35,6 @@ const PartsPage: React.FC = () => {
         last_known_supplier: '',
         purchase_url: '',
         notes: '',
-        image_url: '',
         oe_description: '',
         availability: 'Available',
         alternatives: ''
@@ -77,7 +75,6 @@ const PartsPage: React.FC = () => {
             last_known_supplier: formData.last_known_supplier || null,
             purchase_url: formData.purchase_url || null,
             notes: formData.notes || null,
-            image_url: formData.image_url || null,
             oe_description: formData.oe_description || null
         };
 
@@ -111,7 +108,6 @@ const PartsPage: React.FC = () => {
                 last_known_supplier: '',
                 purchase_url: '',
                 notes: '',
-                image_url: '',
                 oe_description: '',
                 availability: 'Available',
                 alternatives: ''
@@ -131,7 +127,6 @@ const PartsPage: React.FC = () => {
             last_known_supplier: part.last_known_supplier || '',
             purchase_url: part.purchase_url || '',
             notes: part.notes || '',
-            image_url: part.image_url || '',
             oe_description: part.oe_description || '',
             availability: part.availability || 'Available',
             alternatives: part.alternatives?.join(', ') || ''
@@ -368,17 +363,6 @@ const PartsPage: React.FC = () => {
                                 className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                                 value={formData.purchase_url}
                                 onChange={(e) => setFormData({ ...formData, purchase_url: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Image URL</label>
-                            <input
-                                id="image"
-                                placeholder="https://..."
-                                className="w-full bg-background border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
-                                value={formData.image_url}
-                                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                             />
                         </div>
 

@@ -13,7 +13,6 @@ class PartBase(BaseModel):
     last_known_supplier: str | None = None
     purchase_url: str | None = None
     notes: str | None = None
-    image_url: str | None = None
     oe_description: str | None = None
     availability: str = "Available"
     alternatives: list[UUID] = []
@@ -33,7 +32,6 @@ class PartUpdate(BaseModel):
     last_known_supplier: str | None = None
     purchase_url: str | None = None
     notes: str | None = None
-    image_url: str | None = None
     oe_description: str | None = None
     availability: str | None = None
     alternatives: list[UUID] | None = None
