@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Modal } from '10mm-ui-core';
+import { Modal, Button } from '10mm-ui-core';
 import { PhotoManagerModal } from '../components/PhotoManagerModal';
+import { PhotoLightbox } from '../components/PhotoLightbox';
 
 interface Vehicle {
     id: string;
@@ -53,6 +54,8 @@ const PartDetailsPage: React.FC = () => {
     const [isLinking, setIsLinking] = useState(false);
     const [isStockModalOpen, setIsStockModalOpen] = useState(false);
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
     const [stockFormData, setStockFormData] = useState({ location_id: '', quantity: 0 });
 
     useEffect(() => {
@@ -161,7 +164,14 @@ const PartDetailsPage: React.FC = () => {
         setStockLevels(data);
     };
 
+    const openLightbox = (index: number) => {
+        setLightboxIndex(index);
+        setIsLightboxOpen(true);
+    };
+
     if (!part) return <div className="p-8 text-muted-foreground animate-pulse font-mono tracking-widest text-xs uppercase">Synchronizing Part Data...</div>;
+
+    const primaryPhoto = part.photographs.find(p => p.is_primary) || part.photographs[0];
 
     return (
         <div className="p-8 bg-background min-h-screen text-foreground font-sans selection:bg-primary/20">
@@ -200,17 +210,29 @@ const PartDetailsPage: React.FC = () => {
                             </div>
 
                             <div className="flex flex-col items-center lg:items-end space-y-4">
-                                {part.photographs.find(p => p.is_primary) ? (
-                                    <div className="w-48 h-48 lg:w-32 lg:h-32 rounded-2xl overflow-hidden border-4 border-background shadow-xl shrink-0 group relative cursor-pointer" onClick={() => setIsPhotoModalOpen(true)}>
-                                        <img src={part.photographs.find(p => p.is_primary)?.view_url} alt={part.description} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                {primaryPhoto ? (
+                                    <div className="space-y-4 flex flex-col items-center lg:items-end">
+                                        <div
+                                            className="w-48 h-48 lg:w-32 lg:h-32 rounded-3xl overflow-hidden border-4 border-background shadow-2xl shrink-0 group relative cursor-pointer ring-1 ring-border"
+                                            onClick={() => openLightbox(part.photographs.indexOf(primaryPhoto))}
+                                        >
+                                            <img src={primaryPhoto.view_url} alt={part.description} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                                            </div>
                                         </div>
+                                        <button
+                                            onClick={() => setIsPhotoModalOpen(true)}
+                                            className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline flex items-center space-x-2"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                            <span>Manage Photos ({part.photographs.length})</span>
+                                        </button>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={() => setIsPhotoModalOpen(true)}
-                                        className="w-48 h-48 lg:w-32 lg:h-32 rounded-2xl border-2 border-dashed border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center space-y-2 group"
+                                        className="w-48 h-48 lg:w-32 lg:h-32 rounded-3xl border-4 border-dashed border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center space-y-2 group"
                                     >
                                         <svg className="w-6 h-6 text-primary/40 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
                                         <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Add Photo</span>
@@ -411,6 +433,13 @@ const PartDetailsPage: React.FC = () => {
                 partId={part.id}
                 initialPhotos={part.photographs}
                 onPhotosUpdated={(photos) => setPart({ ...part, photographs: photos })}
+            />
+
+            <PhotoLightbox
+                isOpen={isLightboxOpen}
+                onClose={() => setIsLightboxOpen(false)}
+                photos={part.photographs}
+                initialIndex={lightboxIndex}
             />
         </div>
     );

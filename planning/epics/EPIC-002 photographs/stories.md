@@ -48,12 +48,12 @@ As a user, I want to be able to use my device's camera to take multiple photogra
 
 #### Acceptance Criteria
 
-- [ ] There must be a "Take Photo" mode that launches a live camera viewfinder within the application (using the MediaDevices API).
-- [ ] It must be possible to snap photos repeatedly using a single shutter button.
-- [ ] A visible counter must show the number of photos captured in the current session.
-- [ ] The user must be able to switch between the front and rear cameras (if available).
-- [ ] All security and optimization rules from US-002 (WebP, resizing, S3 direct upload, magic byte verification) must apply to these photos.
-- [ ] The user should be able to review captured thumbnails before finalized upload.
+- [x] There must be a "Take Photo" mode that launches a live camera viewfinder within the application (using the MediaDevices API).
+- [x] It must be possible to snap photos repeatedly using a single shutter button.
+- [x] A visible counter must show the number of photos captured in the current session.
+- [x] The user must be able to switch between the front and rear cameras (if available).
+- [x] All security and optimization rules from US-002 (WebP, resizing, S3 direct upload, magic byte verification) must apply to these photos.
+- [x] The user should be able to review captured thumbnails before finalized upload.
 
 ## Dependencies
 
@@ -75,12 +75,12 @@ As a user, I want to be able to view photographs for parts and vehicles so that 
 
 #### Acceptance Criteria
 
-- [ ] WHen I click on the primary photograph for a part, it should open in a modal or a lightbox. Only the primary photograph should be displayed. THere should be controls to navigate to the next and previous photographs
-- [ ] I should be able to zoom in and out of the photograph
-- [ ] I should be able to pan around the photograph
-- [ ] I should be able to close the modal or lightbox by clicking on a close button or by pressing the escape key.
-- [ ] I should be able to download the photograph by clicking on a download button.
-- [ ] The individual part view modal should display a thumbnail of the primary photograph.
-- [ ] The vehicle view modal should display a thumbnail of the primary photograph.
-- [ ] The part list view should not display photographs.
-- [ ] The vehicle list view should not display photographs.
+- [x] WHen I click on the primary photograph for a part, it should open in a modal or a lightbox. Only the primary photograph should be displayed. THere should be controls to navigate to the next and previous photographs
+- [x] I should be able to zoom in and out of the photograph
+- [x] I should be able to pan around the photograph
+- [x] I should be able to close the modal or lightbox by clicking on a close button or by pressing the escape key.
+- [x] I should be able to download the photograph by clicking on a download button.
+- [x] The individual part view modal should display a thumbnail of the primary photograph.
+- [x] The vehicle view modal should display a thumbnail of the primary photograph.
+- [x] The part list view should not display photographs.
+- [x] The vehicle list view should not display photographs.
